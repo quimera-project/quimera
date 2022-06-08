@@ -1,0 +1,44 @@
+name: Build
+on:
+  push:
+    branches:
+      - main 
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+      - name: Clone PwnedShell/quimera-workshop PRIVATE repository
+        uses: GuillaumeFalourd/clone-github-repo-action@v2
+        with:
+          owner: 'PwnedShell'
+          repository: 'quimera-workshop'
+          access-token: ${{ secrets.ACCESS_TOKEN }}
+      - name: Reallocate Workshop
+        run: |
+          sudo mkdir /home/pwnedshell
+          sudo mv quimera-workshop /home/pwnedshell/quimera-workshop
+      - name: Test code
+        run: go test -v tests/*
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.ACCESS_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+      - name: Run Changelog CI
+        uses: saadmk11/changelog-ci@v1.0.0
