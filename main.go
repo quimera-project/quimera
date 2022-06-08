@@ -95,7 +95,7 @@ func setConfig() {
 		if err != nil {
 			live.Printer.Errorf("Version could not be retrieved")
 		}
-		version = v.String()
+		version = strings.TrimSpace(v.String())
 	}
 	env.Config.QuimeraDir = filepath.Join(gopath, "pkg", "mod", "github.com", "quimera-project", fmt.Sprintf("quimera@%s", version))
 	env.Config.WorkshopDir = workshopDir
