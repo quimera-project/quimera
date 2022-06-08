@@ -1,12 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"embed"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
-	"runtime/debug"
 	"strings"
 
 	"github.com/alecthomas/kong"
@@ -74,17 +75,6 @@ func boot(ctx *kong.Context) {
 }
 
 func setConfig() {
-	if version == "" {
-		bi, ok := debug.ReadBuildInfo()
-		if !ok {
-			live.Printer.Fatalf("wrong build info")
-		}
-		if len(bi.Main.Version) < 1 {
-			version = bi.Main.Version
-		} else {
-			version = "unknown"
-		}
-	}
 	home, err := os.UserHomeDir()
 	if err != nil {
 		live.Printer.Fatalf("%v", err)
@@ -95,6 +85,17 @@ func setConfig() {
 	gopath := os.Getenv("GOPATH")
 	if gopath == "" {
 		gopath = filepath.Join(home, "go")
+	}
+	repo := filepath.Join(gopath, "pkg", "mod", "github.com", "quimera-project", "quimera@")
+	if version == "" {
+		var v bytes.Buffer
+		cmd := exec.Command("/bin/sh", "-c", fmt.Sprintf("ls -d %s* | sort -V | tail -n 1 | cut -d '@' -f 2", repo))
+		cmd.Stdout = &v
+		err := cmd.Run()
+		if err != nil {
+			live.Printer.Errorf("Version could not be retrieved")
+		}
+		version = v.String()
 	}
 	env.Config.QuimeraDir = filepath.Join(gopath, "pkg", "mod", "github.com", "quimera-project", fmt.Sprintf("quimera@%s", version))
 	env.Config.WorkshopDir = workshopDir
