@@ -59,6 +59,14 @@ Quimera:
 Run "quimera <command> --help" for more information on a command.
 ```
 
+## Criticidad de la información
+La información de los *checks* puede ser representada según distintos niveles de criticidad:
+
+<img src=".github/img/Criticidad.png" alt="Criticidad" width="25%"/>
+
+> La representación es equivalente en todos los temas.
+
+
 ## Contribuir
 Las contribuciones al proyecto vienen explicadas en el archivo [CONTRIBUIR](.github/CONTRIBUTING.md).
 
