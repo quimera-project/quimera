@@ -23,7 +23,7 @@ func Init(spinner bool) {
 	Printer.Spinner = newSpinner()
 	if spinner {
 		Printer.printer = Printer.Spinner
-		Printer.Spinner.model.Start()
+		// Printer.Spinner.model.Start()
 	} else {
 		Printer.printer = Printer.Color
 	}
