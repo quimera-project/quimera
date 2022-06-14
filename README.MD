@@ -28,6 +28,8 @@
   </p>
 </p>
 
+> 🚧 Este proyecto proviene de un Trabajo Fin de Grado de Ingeniería de la Ciberseguridad. Se encuentra en una fase muy temprana del desarrollo y sufrirá diferentes cambios hasta llegar a una versión estable final.
+
 ## Prerrequisitos
 > Se necesita tener instalada una versión de Go igual o mayor a la 1.18.
 
